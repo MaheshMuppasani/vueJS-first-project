@@ -1,16 +1,28 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <!-- <TicTacToe /> -->
+  <!-- <Learnings /> -->
+  <Game2048 />
+  <!-- <Animated2048 /> -->
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import Learnings from './components/Learnings/Learnings.vue';
+// import TicTacToe from './components/games/tic-tac-toe/TicTacToe';
+import Game2048 from './components/games/2048/Container.vue';
+// import Animated2048 from './components/games/2048 with animations/Game.vue'; 
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  name: "App",
+  components:{
+    // Learnings,
+    // TicTacToe,
+    Game2048,
+    // Animated2048
+  },
+  data() {
+    return {
+    }
+  },
 }
 </script>
 
@@ -21,6 +33,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  align-items: center;
 }
 </style>
