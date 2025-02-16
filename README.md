@@ -1,4 +1,4 @@
-# first-project
+# 2048 Game
 
 ## Project setup
 ```
