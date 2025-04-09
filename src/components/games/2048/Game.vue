@@ -149,11 +149,19 @@ export default {
       const threshold = 30; // min distance of a swipe in px
 
       const handleTouchStart = (e) => {
+        e.stopPropagation();
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
+        e.preventDefault();
+      };
+
+      const handleTouchMove = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
       };
 
       const handleTouchEnd = (e) => {
+        e.stopPropagation();
         const touchEndX = e.changedTouches[0].clientX;
         const touchEndY = e.changedTouches[0].clientY;
 
@@ -162,29 +170,24 @@ export default {
 
         if (Math.abs(diffX) > Math.abs(diffY)) {
           if (Math.abs(diffX) > threshold) {
-            if (diffX > 0) {
-              state.game.handlePlayerInput(arrowKeys.ArrowLeft);
-            } else {
-              state.game.handlePlayerInput(arrowKeys.ArrowRight);
-            }
+            diffX > 0 ? state.game.handlePlayerInput(arrowKeys.ArrowLeft) : state.game.handlePlayerInput(arrowKeys.ArrowRight);
           }
         } else {
           if (Math.abs(diffY) > threshold) {
-            if (diffY > 0) {
-              state.game.handlePlayerInput(arrowKeys.ArrowDown);
-            } else {
-              state.game.handlePlayerInput(arrowKeys.ArrowUp);
-            }
+            diffY > 0 ? state.game.handlePlayerInput(arrowKeys.ArrowDown) : state.game.handlePlayerInput(arrowKeys.ArrowUp)
           }
         }
+        e.preventDefault();
       };
 
-      document.addEventListener('touchstart', handleTouchStart);
-      document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener('touchstart', handleTouchStart, { passive: false });
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd, { passive: false });
 
       onUnmounted(() => {
         document.removeEventListener('touchstart', handleTouchStart);
-          document.removeEventListener('touchend', handleTouchEnd);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
       });
     });
     onMounted(() => {
