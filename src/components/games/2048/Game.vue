@@ -180,14 +180,19 @@ export default {
         e.preventDefault();
       };
 
-      document.addEventListener('touchstart', handleTouchStart, { passive: false });
-      document.addEventListener('touchmove', handleTouchMove, { passive: false });
-      document.addEventListener('touchend', handleTouchEnd, { passive: false });
+      const gameBoard = document.querySelector('.board-container');
+      if(gameBoard){
+        gameBoard.addEventListener('touchstart', handleTouchStart, { passive: false });
+        gameBoard.addEventListener('touchmove', handleTouchMove, { passive: false });
+        gameBoard.addEventListener('touchend', handleTouchEnd, { passive: false });
+      }
 
       onUnmounted(() => {
-        document.removeEventListener('touchstart', handleTouchStart);
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleTouchEnd);
+        if(gameBoard){
+          document.removeEventListener('touchstart', handleTouchStart);
+          document.removeEventListener('touchmove', handleTouchMove);
+          document.removeEventListener('touchend', handleTouchEnd);
+        }
       });
     });
     onMounted(() => {
