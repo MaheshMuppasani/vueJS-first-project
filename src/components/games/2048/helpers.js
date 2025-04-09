@@ -179,8 +179,14 @@ export function setStyleProperties(elem, props) {
 }
 
 export const initBoardParams = (size) => {
-  const cellSpace = 10 * (3 / size);
-  const cellSideLength = 100 * (4 / size);
+  const screenWidth = window.innerWidth;
+  let cs = 10, csLen = 100;
+  if(screenWidth < 1024){
+    cs = 8;
+    csLen = 80;
+  }
+  const cellSpace = cs * (3 / size);
+  const cellSideLength = csLen * (4 / size);
   return {
     size: size,
     cellSpace,

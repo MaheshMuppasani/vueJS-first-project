@@ -21,7 +21,6 @@ export default {
   name: "Menu_2048",
   emits: ["playOrPauseGame"],
   setup(props, context) {
-    // console.log(props);
     const boardTypes = [
       {
         id: 0,
@@ -50,7 +49,7 @@ export default {
       },
       {
         id: 5,
-        name: "Huger",
+        name: "Gigantic",
         size: 8,
       },
     ];

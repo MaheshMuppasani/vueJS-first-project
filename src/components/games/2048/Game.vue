@@ -1,5 +1,8 @@
 <template>
   <div class="Game">
+    <div class="navBack">
+      <button @click="showMenu"><span class="material-icons">chevron_left</span></button>
+    </div>
     <div class="board-container">
       <div class="board" style="display: block; position: relative" ref="boardRef">
         <template v-for="(row, i) in template" :key="i">
@@ -8,7 +11,8 @@
       </div>
     </div>
     <div class="controls">
-      <div class="d-flex">
+      <button class="restartBtn btn btn-info w-100" @click="handleUserInput('reStart')">Restart</button>
+      <div class="d-flex mt-3">
         <div class="scorecard">
           <label class="m-0 font-weight-bold">SCORE</label>
           <h2 class="m-0 font-weight-bold">{{ score }}</h2>
@@ -18,8 +22,7 @@
           <h2 class="m-0 font-weight-bold">{{ highScore }}</h2>
         </div>
       </div>
-      <button class="restartBtn btn btn-info mt-2 w-100" @click="handleUserInput('reStart')">Restart</button>
-      <div class="m-4 m-auto">
+      <div class="control-btn-grp m-4 m-auto">
         <div class="control-group">
           <button
             v-for="btn in movementBtns"
@@ -61,11 +64,11 @@ export default {
       game: new Game2048(game2048Props(boardSize.value)),
     });
     function game2048Props(size){
-      const initialState = previousState(size); // provide your initialState here for board, score and highScore
+      const initialState = previousState(size); // initialState of board, score and highScore
       const props = {
         size,
         boardRef,
-        cellName: 'number-cell', // use this as class selector for number cells to apply your styles
+        cellName: 'number-cell', // class selector for number cells to apply your styles
         setScore,
         handleGameOver
       };
@@ -139,7 +142,51 @@ export default {
       }
       state.game.handlePlayerInput(key);
     }
+    onMounted(() => {
+      let touchStartX = 0;
+      let touchStartY = 0;
 
+      const threshold = 30; // min distance of a swipe in px
+
+      const handleTouchStart = (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      };
+
+      const handleTouchEnd = (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+          if (Math.abs(diffX) > threshold) {
+            if (diffX > 0) {
+              state.game.handlePlayerInput(arrowKeys.ArrowLeft);
+            } else {
+              state.game.handlePlayerInput(arrowKeys.ArrowRight);
+            }
+          }
+        } else {
+          if (Math.abs(diffY) > threshold) {
+            if (diffY > 0) {
+              state.game.handlePlayerInput(arrowKeys.ArrowDown);
+            } else {
+              state.game.handlePlayerInput(arrowKeys.ArrowUp);
+            }
+          }
+        }
+      };
+
+      document.addEventListener('touchstart', handleTouchStart);
+      document.addEventListener('touchend', handleTouchEnd);
+
+      onUnmounted(() => {
+        document.removeEventListener('touchstart', handleTouchStart);
+          document.removeEventListener('touchend', handleTouchEnd);
+      });
+    });
     onMounted(() => {
       document.addEventListener("keyup", handleKeyStroke);
     });
@@ -204,9 +251,11 @@ export default {
   display: flex;
   width: 100%;
   position: relative;
+  gap: 3rem;
+  justify-content: center;
 }
 .board-container {
-  width: 60%;
+  /* width: 60%; */
   display: flex;
 }
 .controls {
@@ -214,14 +263,13 @@ export default {
   align-items: center;
   flex-direction: column;
   right: 0;
-  margin-left: 30px;
 }
 .board {
   position: relative;
   background: rgba(0, 0, 0, 40%);
   border-radius: 6px;
   overflow: hidden;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 .scorecard {
   border-radius: 10px;
@@ -320,5 +368,42 @@ export default {
 }
 .control-group button[class="arrow-right"] .material-icons {
   transform: rotate(-135deg);
+}
+.navBack{
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  display: none;
+}
+.navBack button{
+  background: rgba(0, 0, 0, 18%);
+  display: flex;
+  align-items: center;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 0.3rem 0.5rem;
+}
+@media screen and (max-width: 1024px){
+  .Game{
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    top: -5%;
+  }
+  .board-container{
+    order: 2;
+  }
+  .controls{
+    order: 1;
+  }
+  .control-btn-grp{
+    display: none;
+  }
+  .navBack{
+    display: block;
+  }
 }
 </style>
